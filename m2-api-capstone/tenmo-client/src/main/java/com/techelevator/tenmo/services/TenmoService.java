@@ -1,10 +1,12 @@
 package com.techelevator.tenmo.services;
 
-import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.models.Account;
+import com.techelevator.tenmo.models.Transfer;
 import io.cucumber.java.en_old.Ac;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 public class TenmoService {
@@ -25,6 +27,21 @@ public class TenmoService {
         account = restTemplate.exchange(BASE_SERVICE_URL + "accounts/" + userId, HttpMethod.GET, entity, Account.class).getBody();
 
         return account;
+    }
+
+    public void createTransfer(Transfer transfer){
+        HttpEntity entity = makeTransferEntity(transfer);
+
+        restTemplate.exchange(BASE_SERVICE_URL + "transfers", HttpMethod.POST, entity, Transfer.class);
+
+    }
+
+    private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(AUTH_TOKEN);
+        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+        return entity;
     }
 
 

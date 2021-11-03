@@ -1,6 +1,8 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.models.Transfer;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -97,4 +99,32 @@ public class ConsoleService {
 		} while(result == null);
 		return result;
 	}
+
+	public Double getUserInputDouble(String prompt) {
+		Double result = null;
+		do {
+			out.print(prompt+": ");
+			out.flush();
+			String userInput = in.nextLine();
+			try {
+				result = Double.parseDouble(userInput);
+			} catch(NumberFormatException e) {
+				out.println(System.lineSeparator() + "*** " + userInput + " is not valid ***" + System.lineSeparator());
+			}
+		} while(result == null);
+		return result;
+	}
+
+
+	public Transfer getTransferInfo(int toUserId, int fromUserId, double moneyToTransfer) {
+		Transfer transfer = new Transfer();
+
+		transfer.setAccountFrom(fromUserId);
+		transfer.setAccountTo(toUserId);
+		transfer.setAmount(moneyToTransfer);
+
+		return transfer;
+
+	}
+
 }

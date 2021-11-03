@@ -4,9 +4,12 @@ import com.techelevator.tenmo.auth.models.AuthenticatedUser;
 import com.techelevator.tenmo.auth.models.UserCredentials;
 import com.techelevator.tenmo.auth.services.AuthenticationService;
 import com.techelevator.tenmo.auth.services.AuthenticationServiceException;
-import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.models.Account;
+import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TenmoService;
+
+import java.util.Scanner;
 
 public class App {
 
@@ -87,6 +90,15 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
+		System.out.println("This will eventually show a list of users");
+
+		int toUserId = console.getUserInputInteger("Enter ID of user you are sending to(0 to cancel): ");
+
+		double amount = console.getUserInputDouble("Enter amount: ");
+
+		Transfer transfer = console.getTransferInfo(toUserId, currentUser.getUser().getId(), amount);
+
+		tenmoService.createTransfer(transfer);
 		
 	}
 
