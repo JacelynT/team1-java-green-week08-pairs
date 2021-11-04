@@ -9,6 +9,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class JDBCtenmoDAO implements tenmoDAO{
@@ -35,53 +37,6 @@ public class JDBCtenmoDAO implements tenmoDAO{
         return account;
     }
 
-//    @Override
-//    public double subtractMoney(int fromUserId, double moneyToSubtract) {
-//
-//        Account account = new Account();
-//
-//
-//        String sql = "SELECT * FROM accounts WHERE user_id = ?";
-//
-//        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, fromUserId);
-//
-//        while (results.next()) {
-//            account = mapRowToAccount(results);
-//        }
-//
-//        double accountBalance = account.getAccountBalance();
-//        double newBalance = accountBalance - moneyToSubtract;
-//
-//        account.setAccountBalance(newBalance);
-//
-//        String sql2 = "UPDATE accounts SET balance = ? WHERE user_id = ?";
-//        jdbcTemplate.update(sql2, newBalance, fromUserId);
-//    }
-//
-//
-//    @Override
-//    public double addMoney(int toUserId, double moneyToAdd) {
-//
-//        Account account = new Account();
-//
-//
-//        String sql = "SELECT * FROM accounts WHERE user_id = ?";
-//
-//        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, toUserId);
-//
-//        while (results.next()) {
-//            account = mapRowToAccount(results);
-//        }
-//
-//        double accountBalance = account.getAccountBalance();
-//        double newBalance = accountBalance + moneyToAdd;
-//
-//        account.setAccountBalance(newBalance);
-//
-//        String sql2 = "UPDATE accounts SET balance = ? WHERE user_id = ?";
-//        jdbcTemplate.update(sql2, newBalance, toUserId);
-//    }
-
 
     @Override
     public Transfer createTransfer(int toUserId, int fromUserId, double moneyToTransfer) throws InsufficientBalanceException {
@@ -107,7 +62,6 @@ public class JDBCtenmoDAO implements tenmoDAO{
 
             String sql2 = "UPDATE accounts SET balance = ? WHERE user_id = ?";
             jdbcTemplate.update(sql2, newBalance1, fromUserId);
-
         }
         else {
             throw new InsufficientBalanceException();
@@ -156,6 +110,7 @@ public class JDBCtenmoDAO implements tenmoDAO{
         return account;
 
     }
+
 
 //    private int getNextTransferId() {
 //        SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('seq_transfer_id')");

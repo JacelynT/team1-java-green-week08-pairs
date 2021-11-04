@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.auth.models.User;
 import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.Transfer;
 import io.cucumber.java.en_old.Ac;
@@ -8,6 +9,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TenmoService {
 
@@ -29,11 +33,21 @@ public class TenmoService {
         return account;
     }
 
-    public void createTransfer(Transfer transfer){
+    public void createTransfer(Transfer transfer) {
         HttpEntity entity = makeTransferEntity(transfer);
 
         restTemplate.exchange(BASE_SERVICE_URL + "transfers", HttpMethod.POST, entity, Transfer.class);
 
+    }
+
+    public User[] retrieveAllUsers() {
+        User[] users = null;
+
+        HttpEntity entity = makeAuthEntity();
+
+        users = restTemplate.exchange(BASE_SERVICE_URL + "users", HttpMethod.GET, entity, User[].class).getBody();
+
+        return users;
     }
 
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {

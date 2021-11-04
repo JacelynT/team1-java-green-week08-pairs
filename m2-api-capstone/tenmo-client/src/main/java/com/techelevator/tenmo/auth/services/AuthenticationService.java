@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import com.techelevator.tenmo.auth.models.AuthenticatedUser;
 import com.techelevator.tenmo.auth.models.UserCredentials;
 
+
 public class AuthenticationService {
 
     private String baseUrl;

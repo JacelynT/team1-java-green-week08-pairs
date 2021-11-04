@@ -1,6 +1,7 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.auth.models.AuthenticatedUser;
+import com.techelevator.tenmo.auth.models.User;
 import com.techelevator.tenmo.auth.models.UserCredentials;
 import com.techelevator.tenmo.auth.services.AuthenticationService;
 import com.techelevator.tenmo.auth.services.AuthenticationServiceException;
@@ -8,6 +9,7 @@ import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TenmoService;
+import io.cucumber.java.bs.A;
 
 import java.util.Scanner;
 
@@ -89,16 +91,22 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
+		User[] users = tenmoService.retrieveAllUsers();
+		Account account = tenmoService.retrieveAccountDetails(currentUser.getUser().getId());
 		// TODO Auto-generated method stub
-		System.out.println("This will eventually show a list of users");
+		console.printListOfUsers(users);
 
-		int toUserId = console.getUserInputInteger("Enter ID of user you are sending to(0 to cancel): ");
+		int toUserId = console.getUserInputInteger("Enter ID of user you are sending to(0 to cancel)");
 
-		double amount = console.getUserInputDouble("Enter amount: ");
+		double amount = console.getUserInputDouble("Enter amount");
 
-		Transfer transfer = console.getTransferInfo(toUserId, currentUser.getUser().getId(), amount);
+		if(amount <= account.getAccountBalance()) {
+			Transfer transfer = console.getTransferInfo(toUserId, currentUser.getUser().getId(), amount);
 
-		tenmoService.createTransfer(transfer);
+			tenmoService.createTransfer(transfer);
+		} else {
+			System.out.println("Insufficient funds for transfer!");
+		}
 		
 	}
 

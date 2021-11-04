@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.auth.models.User;
 import com.techelevator.tenmo.models.Transfer;
 
 import java.io.InputStream;
@@ -125,6 +126,18 @@ public class ConsoleService {
 
 		return transfer;
 
+	}
+
+	public void printListOfUsers(User[] users) {
+		System.out.println("-----------------------------");
+		System.out.println("Users");
+		System.out.printf("%-12s %s", "ID", "Name");
+		System.out.println("");
+		System.out.println("-----------------------------");
+		for (User user: users) {
+			System.out.printf("%-12d %s",user.getId(), user.getUsername());
+			System.out.println("");
+		}
 	}
 
 }

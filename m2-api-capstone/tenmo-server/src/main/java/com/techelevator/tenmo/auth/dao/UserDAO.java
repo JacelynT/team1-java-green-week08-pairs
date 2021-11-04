@@ -1,8 +1,10 @@
 package com.techelevator.tenmo.auth.dao;
 
 import com.techelevator.tenmo.auth.model.User;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+
 
 public interface UserDAO {
 
