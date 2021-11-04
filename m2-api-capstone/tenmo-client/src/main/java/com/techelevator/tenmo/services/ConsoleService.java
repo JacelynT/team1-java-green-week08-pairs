@@ -119,14 +119,29 @@ public class ConsoleService {
 	}
 
 
-	public Transfer getTransferInfo(int toUserId, int fromUserId, double moneyToTransfer) {
+	public Transfer getTransferInfoFromUserPrompt(int toUserId, int fromUserId, double moneyToTransfer) {
 		Transfer transfer = new Transfer();
 
 		transfer.setAccountFrom(fromUserId);
 		transfer.setAccountTo(toUserId);
 		transfer.setAmount(moneyToTransfer);
 
+
 		return transfer;
+
+	}
+
+	public void printTransferDetails(Transfer transfer) {
+		System.out.println("-----------------------------");
+		System.out.println("Transfer Details");
+		System.out.println("-----------------------------");
+
+		System.out.println("Id: " + transfer.getTransferId());
+		System.out.println("From: " + transfer.getAccountFromName());
+		System.out.println("To: " + transfer.getAccountToName());
+		System.out.println("Type: " + transfer.getTransferTypeName());
+		System.out.println("Status: Approved");
+		System.out.println("Amount: $" + transfer.getAmount());
 
 	}
 

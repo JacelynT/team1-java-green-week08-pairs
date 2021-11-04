@@ -10,6 +10,7 @@ public class Transfer {
     private int accountTo;
     private String accountToName;
     private double amount;
+    private String transferTypeName;
 
     public int getTransferId() {
         return transferId;
@@ -73,5 +74,18 @@ public class Transfer {
 
     public void setAccountToName(String accountToName) {
         this.accountToName = accountToName;
+    }
+
+    public String getTransferTypeName() {
+        return transferTypeName;
+    }
+
+    public void setTransferTypeName(int transferTypeId) {
+        if (this.transferTypeId == 2) {
+            transferTypeName = "Send";
+        }
+        if (this.transferTypeId == 1) {
+            transferTypeName = "Request";
+        }
     }
 }

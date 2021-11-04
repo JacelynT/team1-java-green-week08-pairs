@@ -99,10 +99,11 @@ public class JDBCtenmoDAO implements tenmoDAO {
         return transfer;
     }
 
+    @Override
     public List<Transfer> retrieveAllTransfersForUser(int accountId) {
         List<Transfer> transferList = new ArrayList<>();
 
-        String sql1 = "SELECT * FROM transfers JOIN accounts ON transfers.account_to = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE transfers.account_to = ?";
+        String sql1 = "SELECT * FROM transfers JOIN accounts ON transfers.account_from = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE transfers.account_to = ?";
         SqlRowSet results1 = jdbcTemplate.queryForRowSet(sql1, accountId);
 
         while (results1.next()) {
@@ -123,23 +124,21 @@ public class JDBCtenmoDAO implements tenmoDAO {
         return transferList;
     }
 
-//    public List<Transfer> retrieveAllTransfersToUser(int accountId) {
-//        List<Transfer> transferList = new ArrayList<>();
-//
-//        String sql2 = "SELECT * FROM transfers JOIN accounts ON transfers.account_to = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE transfers.account_from = ?";
-//        SqlRowSet results2 = jdbcTemplate.queryForRowSet(sql2, accountId);
-//
-//        while (results2.next()) {
-//            Transfer transfer = mapRowToTransfer(results2);
-//            transfer.setAccountToName(results2.getString("username"));
-//            transferList.add(transfer);
-//        }
-//
-//        return transferList;
-//    }
 
+    @Override
+    public Transfer retrieveTransferDetails(int transferId) {
+        Transfer transfer = new Transfer();
 
-    //transfers by transfer id
+        String sql = "SELECT * FROM transfers WHERE transfer_id = ?";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
+
+        if (results.next()) {
+            transfer = mapRowToTransfer(results);
+        }
+
+        return transfer;
+    }
 
     private Account mapRowToAccount(SqlRowSet results) {
         Account account = new Account();

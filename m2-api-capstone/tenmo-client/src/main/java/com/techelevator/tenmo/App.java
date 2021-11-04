@@ -85,6 +85,10 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		Account account = tenmoService.retrieveAccountDetails(currentUser.getUser().getId());
 		Transfer[] transfer = tenmoService.retrieveTransfersForUser(account.getAccountId());
 		console.printListOfTransfersForUser(transfer);
+
+		int transferId = console.getUserInputInteger("Please enter transfer ID to view details (0 to cancel)");
+		Transfer chosenTransfer = tenmoService.retrieveTransferDetails(transferId);
+		console.printTransferDetails(chosenTransfer);
 		
 	}
 
@@ -104,7 +108,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		double amount = console.getUserInputDouble("Enter amount");
 
 		if(amount <= account.getAccountBalance()) {
-			Transfer transfer = console.getTransferInfo(toUserId, currentUser.getUser().getId(), amount);
+			Transfer transfer = console.getTransferInfoFromUserPrompt(toUserId, currentUser.getUser().getId(), amount);
 
 			tenmoService.createTransfer(transfer);
 		} else {

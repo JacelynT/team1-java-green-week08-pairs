@@ -25,5 +25,7 @@ public interface tenmoDAO {
 
     //public List<Transfer> retrieveAllTransfersToUser(int accountId);
 
+    public Transfer retrieveTransferDetails(int transferId);
+
 
 }
