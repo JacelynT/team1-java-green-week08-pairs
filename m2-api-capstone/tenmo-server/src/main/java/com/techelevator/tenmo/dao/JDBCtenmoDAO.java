@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class JDBCtenmoDAO implements tenmoDAO{
+public class JDBCtenmoDAO implements tenmoDAO {
 
     private JdbcTemplate jdbcTemplate;
 
@@ -22,7 +22,7 @@ public class JDBCtenmoDAO implements tenmoDAO{
     }
 
     @Override
-    public Account retrieveAccountDetails(int userId){
+    public Account retrieveAccountDetails(int userId) {
 
         Account account = new Account();
 
@@ -62,8 +62,7 @@ public class JDBCtenmoDAO implements tenmoDAO{
 
             String sql2 = "UPDATE accounts SET balance = ? WHERE user_id = ?";
             jdbcTemplate.update(sql2, newBalance1, fromUserId);
-        }
-        else {
+        } else {
             throw new InsufficientBalanceException();
         }
 
@@ -100,6 +99,48 @@ public class JDBCtenmoDAO implements tenmoDAO{
         return transfer;
     }
 
+    public List<Transfer> retrieveAllTransfersForUser(int accountId) {
+        List<Transfer> transferList = new ArrayList<>();
+
+        String sql1 = "SELECT * FROM transfers JOIN accounts ON transfers.account_to = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE transfers.account_to = ?";
+        SqlRowSet results1 = jdbcTemplate.queryForRowSet(sql1, accountId);
+
+        while (results1.next()) {
+            Transfer transfer = mapRowToTransfer(results1);
+            transfer.setAccountFromName(results1.getString("username"));
+            transferList.add(transfer);
+        }
+
+        String sql2 = "SELECT * FROM transfers JOIN accounts ON transfers.account_to = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE transfers.account_from = ?";
+        SqlRowSet results2 = jdbcTemplate.queryForRowSet(sql2, accountId);
+
+        while (results2.next()) {
+            Transfer transfer = mapRowToTransfer(results2);
+            transfer.setAccountToName(results2.getString("username"));
+            transferList.add(transfer);
+        }
+
+        return transferList;
+    }
+
+//    public List<Transfer> retrieveAllTransfersToUser(int accountId) {
+//        List<Transfer> transferList = new ArrayList<>();
+//
+//        String sql2 = "SELECT * FROM transfers JOIN accounts ON transfers.account_to = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE transfers.account_from = ?";
+//        SqlRowSet results2 = jdbcTemplate.queryForRowSet(sql2, accountId);
+//
+//        while (results2.next()) {
+//            Transfer transfer = mapRowToTransfer(results2);
+//            transfer.setAccountToName(results2.getString("username"));
+//            transferList.add(transfer);
+//        }
+//
+//        return transferList;
+//    }
+
+
+    //transfers by transfer id
+
     private Account mapRowToAccount(SqlRowSet results) {
         Account account = new Account();
 
@@ -108,6 +149,20 @@ public class JDBCtenmoDAO implements tenmoDAO{
         account.setUserId(results.getInt("user_id"));
 
         return account;
+
+    }
+
+    private Transfer mapRowToTransfer(SqlRowSet results) {
+        Transfer transfer = new Transfer();
+
+        transfer.setTransferStatusId(results.getInt("transfer_status_id"));
+        transfer.setTransferTypeId(results.getInt("transfer_type_id"));
+        transfer.setTransferId(results.getInt("transfer_id"));
+        transfer.setAccountFrom(results.getInt("account_from"));
+        transfer.setAccountTo(results.getInt("account_to"));
+        transfer.setAmount(results.getDouble("amount"));
+
+        return transfer;
 
     }
 

@@ -21,9 +21,9 @@ public interface tenmoDAO {
 
     public Transfer createTransfer(int toUserId, int fromUserId, double moneyToTransfer) throws InsufficientBalanceException;
 
+    public List<Transfer> retrieveAllTransfersForUser(int accountId);
 
-
-
+    //public List<Transfer> retrieveAllTransfersToUser(int accountId);
 
 
 }

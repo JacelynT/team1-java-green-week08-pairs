@@ -37,5 +37,15 @@ public class tenmoController {
         return userDAO.findAll();
     }
 
+    @RequestMapping(path = "/transfers/{accountId}")
+    public List<Transfer> retrieveTransfersForUser(@PathVariable int accountId) {
+        return dao.retrieveAllTransfersForUser(accountId);
+    }
+
+//    @RequestMapping(path = "/transfers/account-from/{accountId}")
+//    public List<Transfer> retrieveTransfersFromUser(@PathVariable int accountId) {
+//        return dao.retrieveAllTransfersFromUser(accountId);
+//    }
+
 
 }

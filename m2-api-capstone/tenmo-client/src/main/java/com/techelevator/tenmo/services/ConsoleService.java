@@ -1,8 +1,10 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.auth.models.AuthenticatedUser;
 import com.techelevator.tenmo.auth.models.User;
 import com.techelevator.tenmo.models.Transfer;
+import com.techelevator.tenmo.models.Account;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,13 +34,13 @@ public class ConsoleService {
 	}
 
 	public void showRegistrationFailed(String message) {
-		out.println("REGISTRATION ERROR: "+message);
+		out.println("REGISTRATION ERROR: " + message);
 		out.println("Please attempt to register again.");
 		out.flush();
 	}
 
 	public void showLoginFailed(String message) {
-		out.println("LOGIN ERROR: "+message);
+		out.println("LOGIN ERROR: " + message);
 		out.println("Please attempt to login again.");
 		out.flush();
 	}
@@ -81,7 +83,7 @@ public class ConsoleService {
 	}
 
 	public String getUserInput(String prompt) {
-		out.print(prompt+": ");
+		out.print(prompt + ": ");
 		out.flush();
 		return in.nextLine();
 	}
@@ -89,30 +91,30 @@ public class ConsoleService {
 	public Integer getUserInputInteger(String prompt) {
 		Integer result = null;
 		do {
-			out.print(prompt+": ");
+			out.print(prompt + ": ");
 			out.flush();
 			String userInput = in.nextLine();
 			try {
 				result = Integer.parseInt(userInput);
-			} catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				out.println(System.lineSeparator() + "*** " + userInput + " is not valid ***" + System.lineSeparator());
 			}
-		} while(result == null);
+		} while (result == null);
 		return result;
 	}
 
 	public Double getUserInputDouble(String prompt) {
 		Double result = null;
 		do {
-			out.print(prompt+": ");
+			out.print(prompt + ": ");
 			out.flush();
 			String userInput = in.nextLine();
 			try {
 				result = Double.parseDouble(userInput);
-			} catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				out.println(System.lineSeparator() + "*** " + userInput + " is not valid ***" + System.lineSeparator());
 			}
-		} while(result == null);
+		} while (result == null);
 		return result;
 	}
 
@@ -134,10 +136,28 @@ public class ConsoleService {
 		System.out.printf("%-12s %s", "ID", "Name");
 		System.out.println("");
 		System.out.println("-----------------------------");
-		for (User user: users) {
-			System.out.printf("%-12d %s",user.getId(), user.getUsername());
+		for (User user : users) {
+			System.out.printf("%-12d %s", user.getId(), user.getUsername());
 			System.out.println("");
 		}
 	}
 
+	public void printListOfTransfersForUser(Transfer[] transfers) {
+
+		System.out.println("-----------------------------");
+		System.out.println("Transfers");
+		System.out.printf("%-12s %-17s %s", "ID", "From/To", "Amount");
+		System.out.println("");
+		System.out.println("-----------------------------");
+		for (Transfer transfer : transfers) {
+			if (transfer.getAccountFromName() == null) {
+				System.out.printf("%-12s %-17s %.2f", transfer.getTransferId(), "To " + transfer.getAccountToName(), transfer.getAmount());
+				System.out.println("");
+			} else if (transfer.getAccountToName() == null) {
+				System.out.printf("%-12s %-17s %.2f", transfer.getTransferId(), "From " + transfer.getAccountFromName(), transfer.getAmount());
+				System.out.println("");
+			}
+		}
+
+	}
 }

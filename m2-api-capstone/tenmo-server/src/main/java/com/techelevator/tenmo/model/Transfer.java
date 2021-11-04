@@ -6,8 +6,27 @@ public class Transfer {
     private int transferTypeId;
     private int transferStatusId;
     private int accountFrom;
+    private String accountFromName;
     private int accountTo;
     private double amount;
+
+    public String getAccountFromName() {
+        return accountFromName;
+    }
+
+    public void setAccountFromName(String accountFromName) {
+        this.accountFromName = accountFromName;
+    }
+
+    public String getAccountToName() {
+        return accountToName;
+    }
+
+    public void setAccountToName(String accountToName) {
+        this.accountToName = accountToName;
+    }
+
+    private String accountToName;
 
     public int getTransferId() {
         return transferId;

@@ -50,6 +50,26 @@ public class TenmoService {
         return users;
     }
 
+    public Transfer[] retrieveTransfersForUser(int accountId) {
+        Transfer[] transfers = null;
+
+        HttpEntity entity = makeAuthEntity();
+
+        transfers = restTemplate.exchange(BASE_SERVICE_URL + "transfers/" + accountId, HttpMethod.GET, entity, Transfer[].class).getBody();
+
+        return transfers;
+    }
+
+//    public Transfer[] retrieveTransfersByAccountTo(int userId) {
+//        Transfer[] transfers = null;
+//
+//        HttpEntity entity = makeAuthEntity();
+//
+//        transfers = restTemplate.exchange(BASE_SERVICE_URL + "transfers/account-to/" + userId, HttpMethod.GET, entity, Transfer[].class).getBody();
+//
+//        return transfers;
+//    }
+
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
