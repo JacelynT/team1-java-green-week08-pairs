@@ -1,10 +1,9 @@
 package com.techelevator.tenmo.dao;
 
-import com.techelevator.tenmo.InsufficientBalanceException.InsufficientBalanceException;
-import com.techelevator.tenmo.auth.model.User;
+import com.techelevator.tenmo.Exceptions.InsufficientBalanceException;
+import com.techelevator.tenmo.Exceptions.NegativeNumberException;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public interface tenmoDAO {
 //    public void subtractMoney(int fromUserId, double moneyToSubtract);
 
 
-    public Transfer createTransfer(int toUserId, int fromUserId, double moneyToTransfer) throws InsufficientBalanceException;
+    public Transfer createTransfer(int toUserId, int fromUserId, double moneyToTransfer) throws InsufficientBalanceException, NegativeNumberException;
 
     public List<Transfer> retrieveAllTransfersForUser(int accountId);
 

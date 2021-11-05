@@ -1,17 +1,19 @@
 package com.techelevator.tenmo.controller;
 
-import com.techelevator.tenmo.InsufficientBalanceException.InsufficientBalanceException;
+import com.techelevator.tenmo.Exceptions.InsufficientBalanceException;
+import com.techelevator.tenmo.Exceptions.NegativeNumberException;
 import com.techelevator.tenmo.auth.dao.UserDAO;
 import com.techelevator.tenmo.auth.model.User;
 import com.techelevator.tenmo.dao.tenmoDAO;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@PreAuthorize("isAuthenticated()")
 @RestController
 public class tenmoController {
 
@@ -28,7 +30,7 @@ public class tenmoController {
 
 
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)
-    public Transfer createTransfer(@RequestBody Transfer transfer) throws InsufficientBalanceException {
+    public Transfer createTransfer(@RequestBody Transfer transfer) throws InsufficientBalanceException, NegativeNumberException {
         return dao.createTransfer (transfer.getAccountTo(), transfer.getAccountFrom(), transfer.getAmount());
     }
 
@@ -46,11 +48,6 @@ public class tenmoController {
     public Transfer retrieveTransferDetails(@PathVariable int transferId){
         return dao.retrieveTransferDetails(transferId);
     }
-
-//    @RequestMapping(path = "/transfers/account-from/{accountId}")
-//    public List<Transfer> retrieveTransfersFromUser(@PathVariable int accountId) {
-//        return dao.retrieveAllTransfersFromUser(accountId);
-//    }
 
 
 }

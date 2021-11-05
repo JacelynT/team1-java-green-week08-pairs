@@ -1,7 +1,7 @@
 package com.techelevator.tenmo.dao;
 
-import com.techelevator.tenmo.InsufficientBalanceException.InsufficientBalanceException;
-import com.techelevator.tenmo.auth.model.User;
+import com.techelevator.tenmo.Exceptions.InsufficientBalanceException;
+import com.techelevator.tenmo.Exceptions.NegativeNumberException;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,7 +39,7 @@ public class JDBCtenmoDAO implements tenmoDAO {
 
 
     @Override
-    public Transfer createTransfer(int toUserId, int fromUserId, double moneyToTransfer) throws InsufficientBalanceException {
+    public Transfer createTransfer(int toUserId, int fromUserId, double moneyToTransfer) throws InsufficientBalanceException, NegativeNumberException {
         Transfer transfer = new Transfer();
 
         Account fromAccount = new Account();
@@ -62,7 +62,10 @@ public class JDBCtenmoDAO implements tenmoDAO {
 
             String sql2 = "UPDATE accounts SET balance = ? WHERE user_id = ?";
             jdbcTemplate.update(sql2, newBalance1, fromUserId);
-        } else {
+        } else if (moneyToTransfer < 0) {
+            throw new NegativeNumberException();
+        }
+        else {
             throw new InsufficientBalanceException();
         }
 

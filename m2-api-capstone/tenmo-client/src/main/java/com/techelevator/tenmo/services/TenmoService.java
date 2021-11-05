@@ -87,4 +87,8 @@ public class TenmoService {
         return entity;
     }
 
+
+    public void setAUTH_TOKEN(String token) {
+        AUTH_TOKEN = token;
+    }
 }

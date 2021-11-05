@@ -6,9 +6,11 @@ import com.techelevator.tenmo.auth.models.User;
 import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.models.Account;
 
+import javax.validation.constraints.NegativeOrZero;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class ConsoleService {
@@ -103,14 +105,19 @@ public class ConsoleService {
 		return result;
 	}
 
-	public Double getUserInputDouble(String prompt) {
+	public Double getUserInputDouble(String prompt){
 		Double result = null;
 		do {
 			out.print(prompt + ": ");
 			out.flush();
 			String userInput = in.nextLine();
+
 			try {
 				result = Double.parseDouble(userInput);
+				if(BigDecimal.valueOf(result).scale() > 2) {
+					out.println(System.lineSeparator() + "*** " + userInput + " is not valid ***" + System.lineSeparator());
+					result = null;
+				}
 			} catch (NumberFormatException e) {
 				out.println(System.lineSeparator() + "*** " + userInput + " is not valid ***" + System.lineSeparator());
 			}
@@ -142,7 +149,8 @@ public class ConsoleService {
 		System.out.println("To: " + transfer.getAccountToName());
 		System.out.println("Type: Send");
 		System.out.println("Status: Approved");
-		System.out.println("Amount: $" + transfer.getAmount());
+		System.out.printf("%s %.2f","Amount: $", transfer.getAmount());
+		System.out.println("");
 
 	}
 

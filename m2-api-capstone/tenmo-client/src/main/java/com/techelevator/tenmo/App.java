@@ -8,6 +8,7 @@ import com.techelevator.tenmo.auth.services.AuthenticationServiceException;
 import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.services.ConsoleService;
+import com.techelevator.tenmo.services.NegativeNumberException;
 import com.techelevator.tenmo.services.TenmoService;
 import io.cucumber.java.bs.A;
 
@@ -78,7 +79,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
 		Account account = tenmoService.retrieveAccountDetails(currentUser.getUser().getId());
-		System.out.println("Current Balance: " + account.getAccountBalance());
+		System.out.printf("%s %.2f","Current Balance: $", account.getAccountBalance());
+		System.out.println("");
 		
 	}
 
@@ -114,13 +116,6 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 			}
 
-//			for (Transfer transfer : transfers) {
-//				if (transfer.getTransferId() == transferId){
-//					console.printTransferDetails(chosenTransfer);
-//					break;
-//				}
-//			}
-			//System.out.println("Invalid Transfer ID. Please enter a valid option from above.");
 		}
 
 
@@ -133,7 +128,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		
 	}
 
-	private void sendBucks() {
+	private void sendBucks(){
 		User[] users = tenmoService.retrieveAllUsers();
 		Account account = tenmoService.retrieveAccountDetails(currentUser.getUser().getId());
 
@@ -142,7 +137,14 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 			int toUserId = console.getUserInputInteger("Enter ID of user you are sending to(0 to cancel)");
 			System.out.println("");
+			if (toUserId == 0) {
+				break;
+			}
 
+			if (currentUser.getUser().getId() == toUserId) {
+				System.out.println("Invalid choice. Please choose a different user.");
+				break;
+			}
 
 			List<Integer> userIds = new ArrayList<>();
 			for (User user : users) {
@@ -152,11 +154,13 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			if (userIds.contains(toUserId)) {
 				double amount = console.getUserInputDouble("Enter amount");
 
-				if(amount <= account.getAccountBalance()) {
-					Transfer transfer = console.getTransferInfoFromUserPrompt(toUserId, currentUser.getUser().getId(), amount);
-					tenmoService.createTransfer(transfer);
-					break;
-				} else {
+				if(amount <= account.getAccountBalance() && amount > 0) {
+						Transfer transfer = console.getTransferInfoFromUserPrompt(toUserId, currentUser.getUser().getId(), amount);
+						tenmoService.createTransfer(transfer);
+						break;
+					} else if (amount < 0) {
+						System.out.println("Amount cannot be negative.");
+					} else {
 					System.out.println("Insufficient funds for transfer!");
 				}
 			}
@@ -217,6 +221,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			UserCredentials credentials = collectUserCredentials();
 		    try {
 				currentUser = authenticationService.login(credentials);
+				tenmoService.setAUTH_TOKEN(currentUser.getToken());
 			} catch (AuthenticationServiceException e) {
 				console.showLoginFailed(e.getMessage());
 			}

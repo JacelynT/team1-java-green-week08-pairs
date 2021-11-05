@@ -1,4 +1,4 @@
-package com.techelevator.tenmo.InsufficientBalanceException;
+package com.techelevator.tenmo.Exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

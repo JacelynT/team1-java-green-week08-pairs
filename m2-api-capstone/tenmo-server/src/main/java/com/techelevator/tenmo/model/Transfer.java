@@ -1,5 +1,7 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.Positive;
+
 public class Transfer {
 
     private int transferId;
@@ -8,6 +10,7 @@ public class Transfer {
     private int accountFrom;
     private String accountFromName;
     private int accountTo;
+    @Positive(message = "Amount must be a positive number.")
     private double amount;
 
     public String getAccountFromName() {
