@@ -125,7 +125,8 @@ public class ConsoleService {
 		transfer.setAccountFrom(fromUserId);
 		transfer.setAccountTo(toUserId);
 		transfer.setAmount(moneyToTransfer);
-
+		transfer.setTransferTypeId(2);
+		transfer.setTransferStatusId(2);
 
 		return transfer;
 
@@ -139,7 +140,7 @@ public class ConsoleService {
 		System.out.println("Id: " + transfer.getTransferId());
 		System.out.println("From: " + transfer.getAccountFromName());
 		System.out.println("To: " + transfer.getAccountToName());
-		System.out.println("Type: " + transfer.getTransferTypeName());
+		System.out.println("Type: Send");
 		System.out.println("Status: Approved");
 		System.out.println("Amount: $" + transfer.getAmount());
 

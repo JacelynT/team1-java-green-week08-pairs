@@ -80,12 +80,7 @@ public class Transfer {
         return transferTypeName;
     }
 
-    public void setTransferTypeName(int transferTypeId) {
-        if (this.transferTypeId == 2) {
-            transferTypeName = "Send";
-        }
-        if (this.transferTypeId == 1) {
-            transferTypeName = "Request";
-        }
+    public void setTransferTypeName(String transferTypeName) {
+        this.transferTypeName = transferTypeName;
     }
 }

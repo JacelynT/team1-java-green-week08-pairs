@@ -11,6 +11,8 @@ import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TenmoService;
 import io.cucumber.java.bs.A;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -83,12 +85,46 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
 		Account account = tenmoService.retrieveAccountDetails(currentUser.getUser().getId());
-		Transfer[] transfer = tenmoService.retrieveTransfersForUser(account.getAccountId());
-		console.printListOfTransfersForUser(transfer);
 
-		int transferId = console.getUserInputInteger("Please enter transfer ID to view details (0 to cancel)");
-		Transfer chosenTransfer = tenmoService.retrieveTransferDetails(transferId);
-		console.printTransferDetails(chosenTransfer);
+		Transfer[] transfers = tenmoService.retrieveTransfersForUser(account.getAccountId());
+
+		while (true) {
+
+			console.printListOfTransfersForUser(transfers);
+			System.out.println("");
+			int transferId = console.getUserInputInteger("Please enter transfer ID to view details (0 to cancel)");
+			System.out.println("");
+			Transfer chosenTransfer = tenmoService.retrieveTransferDetails(transferId);
+
+			if(transferId == 0) {
+				break;
+
+			}
+			List<Integer> transferIds = new ArrayList<>();
+			for (Transfer transfer : transfers) {
+				transferIds.add(transfer.getTransferId());
+			}
+
+			if (transferIds.contains(transferId)) {
+				console.printTransferDetails(chosenTransfer);
+				break;
+			}
+			else {
+				System.out.println("Invalid Transfer ID. Please enter a valid option from above.");
+
+			}
+
+//			for (Transfer transfer : transfers) {
+//				if (transfer.getTransferId() == transferId){
+//					console.printTransferDetails(chosenTransfer);
+//					break;
+//				}
+//			}
+			//System.out.println("Invalid Transfer ID. Please enter a valid option from above.");
+		}
+
+
+
 		
 	}
 
@@ -100,21 +136,34 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private void sendBucks() {
 		User[] users = tenmoService.retrieveAllUsers();
 		Account account = tenmoService.retrieveAccountDetails(currentUser.getUser().getId());
-		// TODO Auto-generated method stub
-		console.printListOfUsers(users);
 
-		int toUserId = console.getUserInputInteger("Enter ID of user you are sending to(0 to cancel)");
+		while (true) {
+			console.printListOfUsers(users);
 
-		double amount = console.getUserInputDouble("Enter amount");
+			int toUserId = console.getUserInputInteger("Enter ID of user you are sending to(0 to cancel)");
+			System.out.println("");
 
-		if(amount <= account.getAccountBalance()) {
-			Transfer transfer = console.getTransferInfoFromUserPrompt(toUserId, currentUser.getUser().getId(), amount);
 
-			tenmoService.createTransfer(transfer);
-		} else {
-			System.out.println("Insufficient funds for transfer!");
+			List<Integer> userIds = new ArrayList<>();
+			for (User user : users) {
+				userIds.add(user.getId());
+			}
+
+			if (userIds.contains(toUserId)) {
+				double amount = console.getUserInputDouble("Enter amount");
+
+				if(amount <= account.getAccountBalance()) {
+					Transfer transfer = console.getTransferInfoFromUserPrompt(toUserId, currentUser.getUser().getId(), amount);
+					tenmoService.createTransfer(transfer);
+					break;
+				} else {
+					System.out.println("Insufficient funds for transfer!");
+				}
+			}
+			else {
+				System.out.println("Invalid User ID. Please enter a valid option from above.");
+			}
 		}
-		
 	}
 
 	private void requestBucks() {

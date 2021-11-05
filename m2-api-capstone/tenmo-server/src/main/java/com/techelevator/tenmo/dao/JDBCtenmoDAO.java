@@ -129,12 +129,34 @@ public class JDBCtenmoDAO implements tenmoDAO {
     public Transfer retrieveTransferDetails(int transferId) {
         Transfer transfer = new Transfer();
 
-        String sql = "SELECT * FROM transfers WHERE transfer_id = ?";
+        String sql = "SELECT * FROM users JOIN accounts ON users.user_id = accounts.user_id JOIN transfers ON accounts.account_id = transfers.account_to OR accounts.account_id = transfers.account_from WHERE transfers.transfer_id = ?";
+
+
+//        String sql1 = "SELECT * FROM transfers  WHERE transfer_id = ?";
+//
+//        String sql2 = "SELECT username, account_from FROM transfers JOIN accounts ON transfers.account_to = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE transfers.transfer_id = ?";
+//
+//        String sql3 = "SELECT username FROM transfers JOIN accounts ON transfers.account_to = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE accounts.account_id = ?";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
 
         if (results.next()) {
             transfer = mapRowToTransfer(results);
+        }
+
+        String sqlFrom = "SELECT username FROM users JOIN accounts ON users.user_id = accounts.user_id JOIN transfers ON accounts.account_id = transfers.account_from WHERE transfers.account_from = ? AND transfers.transfer_id =?";
+
+        String sqlTo = "SELECT username FROM users JOIN accounts ON users.user_id = accounts.user_id JOIN transfers ON accounts.account_id = transfers.account_to WHERE transfers.account_to = ? AND transfers.transfer_id = ?";
+
+        SqlRowSet resultsFrom = jdbcTemplate.queryForRowSet(sqlFrom, transfer.getAccountFrom(), transfer.getTransferId());
+
+        SqlRowSet resultsTo = jdbcTemplate.queryForRowSet(sqlTo, transfer.getAccountTo(), transfer.getTransferId());
+
+        if (resultsFrom.next()) {
+            transfer.setAccountFromName(resultsFrom.getString("username"));
+        }
+        if (resultsTo.next()) {
+            transfer.setAccountToName(resultsTo.getString("username"));
         }
 
         return transfer;
